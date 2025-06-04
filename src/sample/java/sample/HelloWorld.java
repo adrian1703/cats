@@ -1,4 +1,4 @@
-package adrian.framework.cats;
+package sample;
 
 import java.util.concurrent.Callable;
 

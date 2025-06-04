@@ -1,5 +1,5 @@
-import adrian.framework.cats.HelloWorld
-import adrian.framework.cats.HelloWorldKt
+import sample.HelloWorld
+import sample.HelloWorldKt
 import spock.lang.Specification
 
 class HelloWorldTest extends Specification {

@@ -3,6 +3,7 @@
 plugins {
     kotlin("jvm") version "2.1.20"
     id("groovy")
+    id("java-library")
 }
 kotlin {
     jvmToolchain(23)
@@ -14,28 +15,49 @@ version = "1.0-SNAPSHOT"
 repositories {
     mavenCentral()
 }
+java {
+    modularity.inferModulePath.set(true)
+    java.targetCompatibility = JavaVersion.VERSION_23
+    java.sourceCompatibility = JavaVersion.VERSION_23
+}
+
+tasks.named("compileJava", JavaCompile::class.java) {
+    options.compilerArgumentProviders.add(CommandLineArgumentProvider {
+        // Provide compiled Kotlin classes to javac – needed for Java/Kotlin mixed sources to work
+        listOf("--patch-module", "YOUR_MODULE_NAME=${sourceSets["core"].output.asPath}")
+    })
+}
 
 sourceSets {
     getByName("main"){
         kotlin.srcDirs("src/main/kotlin")
         java  .srcDirs("src/main/java")
     }
+    val core by creating {
+        kotlin.srcDirs("src/core/kotlin")
+        java  .srcDirs("src/core/java")
+    }
+    val demo by creating {
+        kotlin.srcDirs("src/demo/kotlin")
+        java  .srcDirs("src/demo/java")
+    }
     getByName("test"){
         kotlin.srcDirs("src/test/kotlin")
         java  .srcDirs("src/test/java")
         groovy.srcDirs("src/test/groovy")
-    }
-    val sample by creating {
-        kotlin.srcDirs("src/sample/kotlin")
-        java  .srcDirs("src/sample/java")
+        compileClasspath += core.output
+        compileClasspath += core.output
+        runtimeClasspath += demo.output
+        runtimeClasspath += demo.output
+
     }
 }
 
 configurations {
-    named("sampleImplementation") {
+    named("demoImplementation") {
         extendsFrom(configurations["implementation"])
     }
-    named("sampleRuntimeOnly") {
+    named("demoRuntimeOnly") {
         extendsFrom(configurations["runtimeOnly"])
     }
 }
@@ -50,6 +72,7 @@ dependencies {
     testImplementation (platform("org.spockframework:spock-bom:2.3-groovy-4.0"))
     testImplementation ("org.spockframework:spock-core")
     testImplementation ("org.spockframework:spock-junit4")  // you can remove this if your code does not rely on old JUnit 4 rules
+    testImplementation(sourceSets["demo"].output)
 
     // optional dependencies for using Spock
     // testImplementation("org.hamcrest:hamcrest-core:3.0") // only necessary if Hamcrest matchers are used
@@ -65,7 +88,22 @@ tasks.test {
     useJUnitPlatform()
 }
 
-tasks.register<Jar>("sampleJar") {
-    archiveClassifier.set("sample")
-    from(sourceSets["sample"].output)
+tasks.register<Jar>("coreJar") {
+    archiveBaseName.set("${project.name}-core")
+    from(sourceSets["core"].output)
 }
+
+tasks.register<Jar>("demoJar") {
+    archiveBaseName.set("${project.name}-demo")
+    from(sourceSets["demo"].output)
+}
+
+tasks.named("assemble") {
+    dependsOn("coreJar", "demoJar")
+}
+
+artifacts {
+    add("archives", tasks.named<Jar>("demoJar"))
+    add("archives", tasks.named<Jar>("coreJar"))
+}
+

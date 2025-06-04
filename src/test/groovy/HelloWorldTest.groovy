@@ -1,5 +1,5 @@
-import sample.HelloWorld
-import sample.HelloWorldKt
+import demo.HelloWorld
+import demo.HelloWorldKt
 import spock.lang.Specification
 
 class HelloWorldTest extends Specification {

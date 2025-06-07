@@ -21,12 +21,12 @@ java {
     java.sourceCompatibility = JavaVersion.VERSION_23
 }
 
-tasks.named("compileJava", JavaCompile::class.java) {
-    options.compilerArgumentProviders.add(CommandLineArgumentProvider {
-        // Provide compiled Kotlin classes to javac – needed for Java/Kotlin mixed sources to work
-        listOf("--patch-module", "YOUR_MODULE_NAME=${sourceSets["core"].output.asPath}")
-    })
-}
+//tasks.named("compileJava", JavaCompile::class.java) {
+//    options.compilerArgumentProviders.add(CommandLineArgumentProvider {
+//        // Provide compiled Kotlin classes to javac – needed for Java/Kotlin mixed sources to work
+//        listOf("--patch-module", "YOUR_MODULE_NAME=${sourceSets["core"].output.asPath}")
+//    })
+//}
 
 sourceSets {
     getByName("main"){

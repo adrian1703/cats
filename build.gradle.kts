@@ -53,16 +53,6 @@ sourceSets {
     }
 }
 
-configurations {
-    named("demoImplementation") {
-        extendsFrom(configurations["implementation"])
-    }
-    named("demoRuntimeOnly") {
-        extendsFrom(configurations["runtimeOnly"])
-    }
-}
-
-
 dependencies {
     testImplementation(kotlin("test"))
 
@@ -74,6 +64,8 @@ dependencies {
     testImplementation ("org.spockframework:spock-junit4")  // you can remove this if your code does not rely on old JUnit 4 rules
     testImplementation(sourceSets["demo"].output)
 
+    //core
+    add("coreImplementation", "net.jcip:jcip-annotations:1.0")
     // optional dependencies for using Spock
     // testImplementation("org.hamcrest:hamcrest-core:3.0") // only necessary if Hamcrest matchers are used
     // testRuntimeOnly ("net.bytebuddy:byte-buddy:1.17.5") // allows mocking of classes (in addition to interfaces)

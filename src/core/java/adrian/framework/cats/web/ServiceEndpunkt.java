@@ -1,36 +1,28 @@
 package adrian.framework.cats.web;
 
+import net.jcip.annotations.GuardedBy;
+import net.jcip.annotations.ThreadSafe;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+@ThreadSafe
 public class ServiceEndpunkt implements Runnable {
 
-    private static class State {
-        volatile boolean shouldStop = false;
-        volatile boolean isRunning  = false;
-    }
-
-    private static class Config {
-        protected int port;
-    }
     private final Config config;
     private final State  state;
 
+    private static class State {
+        @GuardedBy("ServiceEndpunkt") boolean shouldStop = false;
+        @GuardedBy("ServiceEndpunkt") boolean isRunning  = false;
+    }
+
+    private record Config(int port) { }
+
     public ServiceEndpunkt(int port) {
-        this.config = new Config();
-        this.config.port = port;
+        this.config = new Config(port);
         this.state = new State();
-    }
-
-    private synchronized void setRunning() {
-        if (state.isRunning) return;
-        state.isRunning = true;
-        state.shouldStop = false;
-    }
-
-    private synchronized void setStopped() {
-        state.isRunning = false;
     }
 
     public synchronized void signalStop() {
@@ -50,5 +42,15 @@ public class ServiceEndpunkt implements Runnable {
         } finally {
             setStopped();
         }
+    }
+
+    private synchronized void setRunning() {
+        if (state.isRunning) return;
+        state.isRunning = true;
+        state.shouldStop = false;
+    }
+
+    private synchronized void setStopped() {
+        state.isRunning = false;
     }
 }

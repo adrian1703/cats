@@ -11,8 +11,9 @@ repositories {
 }
 java {
     modularity.inferModulePath.set(true)
-    java.targetCompatibility = JavaVersion.VERSION_23
-    java.sourceCompatibility = JavaVersion.VERSION_23
+    java.targetCompatibility = JavaVersion.VERSION_21
+    java.sourceCompatibility = JavaVersion.VERSION_21
+
 }
 
 //tasks.named("compileJava", JavaCompile::class.java) {
@@ -40,7 +41,7 @@ dependencies {
     testImplementation (platform("org.spockframework:spock-bom:2.3-groovy-4.0"))
     testImplementation ("org.spockframework:spock-core")
     testImplementation ("org.spockframework:spock-junit4")  // you can remove this if your code does not rely on old JUnit 4 rules
-
+    testImplementation("org.mockito:mockito-inline:5.2.0")
     //core
     // optional dependencies for using Spock
     // testImplementation("org.hamcrest:hamcrest-core:3.0") // only necessary if Hamcrest matchers are used

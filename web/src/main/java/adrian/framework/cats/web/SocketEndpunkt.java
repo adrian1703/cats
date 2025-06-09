@@ -56,7 +56,6 @@ public class SocketEndpunkt {
 
                     socket = state.serverSocket.accept();
                     task   = strategy.socketProcessor.createTask(socket);
-
                     task.run();
                 }
             } catch (IOException e) {

@@ -3,6 +3,12 @@ plugins {
     kotlin("jvm") version "2.1.20"
 }
 
+kotlin {
+    jvmToolchain {
+        languageVersion.set(JavaLanguageVersion.of(21))
+    }
+}
+
 sourceSets {
     getByName("main"){
         kotlin.srcDirs("src/main/kotlin")
@@ -11,4 +17,3 @@ sourceSets {
         kotlin.srcDirs("src/test/kotlin")
     }
 }
-

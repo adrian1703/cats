@@ -3,4 +3,4 @@ plugins {
 }
 
 rootProject.name = "cats-framework"
-include("web", "demo-app")
+include("web", "demo-app", "core")

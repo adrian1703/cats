@@ -16,11 +16,12 @@
           </compositeBuild>
         </compositeConfiguration>
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="gradleHome" value="C:\Program Files\Gradle" />
+        <option name="gradleJvm" value="ms-21" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/buildSrc" />
+            <option value="$PROJECT_DIR$/core" />
             <option value="$PROJECT_DIR$/demo-app" />
             <option value="$PROJECT_DIR$/web" />
           </set>

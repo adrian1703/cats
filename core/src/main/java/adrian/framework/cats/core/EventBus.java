@@ -4,12 +4,10 @@ import net.jcip.annotations.GuardedBy;
 
 import java.util.Arrays;
 import java.util.Queue;
-import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
-
 
 /**
  * A thread-safe event distribution system that manages event publishing and subscription.
@@ -41,6 +39,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class EventBus {
 
+    private final State state;
+
     private static class State {
         private final BlockingQueue<Event<?, ?>> events    = new LinkedBlockingQueue<>();
         private final Queue<EventListener>       listeners = new ConcurrentLinkedQueue<>();
@@ -49,18 +49,8 @@ public class EventBus {
         @GuardedBy("this") private Thread distributor;
     }
 
-    private final State state;
-
     public EventBus() {
         this.state = new State();
-    }
-
-    void register(EventListener... listener) {
-        state.listeners.addAll(Arrays.asList(listener));
-    }
-
-    void submit(Event<?, ?>... event) {
-        state.events.addAll(Arrays.asList(event));
     }
 
     /**
@@ -107,10 +97,19 @@ public class EventBus {
     /**
      * Return the current intended state for the event distributor
      * thread.
+     *
      * @return true if the thread started; false if interrupt was sent.
      */
-    public boolean distributorIsRunning(){
+    public boolean distributorIsRunning() {
         // return state.distributor.isAlive();
         return state.isRunning.get(); // should be more clear than calling alive
+    }
+
+    void register(EventListener... listener) {
+        state.listeners.addAll(Arrays.asList(listener));
+    }
+
+    void submit(Event<?, ?>... event) {
+        state.events.addAll(Arrays.asList(event));
     }
 }

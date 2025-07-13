@@ -1,6 +1,7 @@
 package adrian.framework.cats.core;
 
 import net.jcip.annotations.GuardedBy;
+import net.jcip.annotations.ThreadSafe;
 
 import java.util.Arrays;
 import java.util.Queue;
@@ -37,6 +38,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @see EventListener
  * @see Event
  */
+@ThreadSafe
 public class EventBus {
 
     private final State state;

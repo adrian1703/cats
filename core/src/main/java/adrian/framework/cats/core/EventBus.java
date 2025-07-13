@@ -1,19 +1,54 @@
 package adrian.framework.cats.core;
 
+import net.jcip.annotations.GuardedBy;
+
 import java.util.Arrays;
 import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.atomic.AtomicBoolean;
 
+
+/**
+ * A thread-safe event distribution system that manages event publishing and subscription.
+ * <p>
+ * The EventBus provides a mechanism to decouple event producers from event consumers
+ * by implementing a publish-subscribe pattern. Events are queued and distributed
+ * to registered listeners in a separate thread.
+ * <p>
+ * Key features:
+ * <ul>
+ *   <li>Thread-safe event submission and listener registration
+ *   <li>Asynchronous event distribution via dedicated thread
+ *   <li>Support for multiple listeners and event types
+ *   <li>Controlled lifecycle with start/stop capabilities
+ * </ul>
+ * <p>
+ * Usage example:
+ * <pre>
+ * EventBus bus = new EventBus();
+ * bus.register(new MyEventListener());
+ * bus.submit(new MyEvent());
+ * bus.start();
+ * // ... later
+ * bus.stop();
+ * </pre>
+ *
+ * @see EventListener
+ * @see Event
+ */
 public class EventBus {
 
     private static class State {
-        BlockingQueue<Event<?, ?>> events    = new LinkedBlockingQueue<>();
-        Queue<EventListener>       listeners = new ConcurrentLinkedQueue<>();
-        Thread distributor;
+        private final BlockingQueue<Event<?, ?>> events    = new LinkedBlockingQueue<>();
+        private final Queue<EventListener>       listeners = new ConcurrentLinkedQueue<>();
+        private final AtomicBoolean              isRunning = new AtomicBoolean(false);
+
+        @GuardedBy("this") private Thread distributor;
     }
+
     private final State state;
 
     public EventBus() {
@@ -28,7 +63,20 @@ public class EventBus {
         state.events.addAll(Arrays.asList(event));
     }
 
-    void start() {
+    /**
+     * Starts the event distribution thread that processes events from the queue
+     * and delivers them to registered listeners. The distributor thread runs
+     * continuously in the background, taking events from the queue and
+     * processing them sequentially.
+     * <p>
+     * There is never more than 1 thread running. Subsequent calls are
+     * ignored.
+     * <p>
+     * The distributor thread will continue running until explicitly stopped
+     * using the {@link #stop()} method or when the thread is interrupted.
+     */
+    public synchronized void start() {
+        if (state.isRunning.getAndSet(true)) return;
         state.distributor = new Thread(() -> {
             while (true) {
                 try {
@@ -44,7 +92,25 @@ public class EventBus {
         state.distributor.start();
     }
 
-    void stop() {
+    /**
+     * Interrupts the distributor thread and sets the
+     * `isRunning` flag to false allowing for graceful exit
+     * There might be a slight desync to when the thread actually
+     * stops.
+     */
+    public synchronized void stop() {
+        if (state.distributor == null) return;
+        state.isRunning.set(false);
         state.distributor.interrupt();
+    }
+
+    /**
+     * Return the current intended state for the event distributor
+     * thread.
+     * @return true if the thread started; false if interrupt was sent.
+     */
+    public boolean distributorIsRunning(){
+        // return state.distributor.isAlive();
+        return state.isRunning.get(); // should be more clear than calling alive
     }
 }

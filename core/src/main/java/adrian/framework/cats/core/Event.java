@@ -1,11 +1,14 @@
 package adrian.framework.cats.core;
 
+import net.jcip.annotations.Immutable;
+
 /**
  * Events are the only boundary communication tool.
  *
- * @param <A>
- * @param <B>
+ * @param <A> The command that produced the command
+ * @param <B> The Type of data delivered.
  */
+@Immutable
 public abstract class Event<A extends Command, B> {
     private final A   sourceCommand;
     private final B   data;

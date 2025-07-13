@@ -44,9 +44,9 @@ public class EventBus {
     private final State state;
 
     private static class State {
-        private final BlockingQueue<Event<?, ?>> events    = new LinkedBlockingQueue<>();
-        private final Queue<EventListener>       listeners = new ConcurrentLinkedQueue<>();
-        private final AtomicBoolean              isRunning = new AtomicBoolean(false);
+        private final BlockingQueue<Event> events    = new LinkedBlockingQueue<>();
+        private final Queue<EventListener> listeners = new ConcurrentLinkedQueue<>();
+        private final AtomicBoolean        isRunning = new AtomicBoolean(false);
 
         @GuardedBy("this") private Thread distributor;
     }
@@ -72,7 +72,7 @@ public class EventBus {
         state.distributor = new Thread(() -> {
             while (true) {
                 try {
-                    Event<?, ?> event = state.events.take();
+                    Event event = state.events.take();
                     for (EventListener listener : state.listeners) {
                         listener.onEvent(event);
                     }
@@ -111,7 +111,7 @@ public class EventBus {
         state.listeners.addAll(Arrays.asList(listener));
     }
 
-    void submit(Event<?, ?>... event) {
+    void submit(Event... event) {
         state.events.addAll(Arrays.asList(event));
     }
 }

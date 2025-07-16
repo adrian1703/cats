@@ -1,8 +1,6 @@
 package adrian.framework.cats.core.events;
 
-import java.io.Serializable;
-
-public abstract class ChangelogEvent extends Event implements Runnable, Serializable {
+public abstract class ChangelogEvent extends Event implements Runnable {
 
     private final long     changelogId;
     private final Object[] locks;

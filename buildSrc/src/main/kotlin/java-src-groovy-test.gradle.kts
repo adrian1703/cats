@@ -24,11 +24,11 @@ java {
 //}
 
 sourceSets {
-    getByName("main"){
-        java  .srcDirs("src/main/java")
+    getByName("main") {
+        java.srcDirs("src/main/java")
     }
-    getByName("test"){
-        java  .srcDirs("src/test/java")
+    getByName("test") {
+        java.srcDirs("src/test/java")
         groovy.srcDirs("src/test/groovy")
     }
 }
@@ -36,18 +36,21 @@ sourceSets {
 dependencies {
 
     // mandatory dependencies for using Spock
-    implementation (platform("org.apache.groovy:groovy-bom:4.0.26"))
-    implementation ("org.apache.groovy:groovy")
-    testImplementation (platform("org.spockframework:spock-bom:2.3-groovy-4.0"))
-    testImplementation ("org.spockframework:spock-core")
-    testImplementation ("org.spockframework:spock-junit4")  // you can remove this if your code does not rely on old JUnit 4 rules
+    implementation(platform("org.apache.groovy:groovy-bom:4.0.26"))
+    implementation("org.apache.groovy:groovy")
+    testImplementation(platform("org.spockframework:spock-bom:2.3-groovy-4.0"))
+    testImplementation("org.spockframework:spock-core")
+    testImplementation("org.spockframework:spock-junit4")  // you can remove this if your code does not rely on old JUnit 4 rules
     testImplementation("org.mockito:mockito-inline:5.2.0")
     //core
     // optional dependencies for using Spock
     // testImplementation("org.hamcrest:hamcrest-core:3.0") // only necessary if Hamcrest matchers are used
     // testRuntimeOnly ("net.bytebuddy:byte-buddy:1.17.5") // allows mocking of classes (in addition to interfaces)
     // testRuntimeOnly ("org.objenesis:objenesis:3.4") // allows mocking of classes without default constructor (together with ByteBuddy or CGLIB)
-
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.0")
+// Optional: Assertions library for fluent assertions
+    testImplementation("org.assertj:assertj-core:3.24.2")
 }
 
 tasks.jar {

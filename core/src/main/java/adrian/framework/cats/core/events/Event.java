@@ -1,11 +1,12 @@
-package adrian.framework.cats.core;
+package adrian.framework.cats.core.events;
 
 import net.jcip.annotations.Immutable;
 
 @Immutable
 public abstract class Event {
 
-    private final String guid = java.util.UUID.randomUUID().toString();
+    private final String guid = java.util.UUID.randomUUID()
+                                              .toString();
     private final String description;
 
     protected Event(String description) {

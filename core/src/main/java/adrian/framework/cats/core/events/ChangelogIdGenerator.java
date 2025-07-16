@@ -1,4 +1,4 @@
-package adrian.framework.cats.core;
+package adrian.framework.cats.core.events;
 
 public interface ChangelogIdGenerator {
     long nextId();

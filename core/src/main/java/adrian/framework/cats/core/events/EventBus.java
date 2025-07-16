@@ -1,4 +1,4 @@
-package adrian.framework.cats.core;
+package adrian.framework.cats.core.events;
 
 import net.jcip.annotations.GuardedBy;
 import net.jcip.annotations.ThreadSafe;
@@ -117,8 +117,8 @@ public class EventBus {
 
     void submit(Event... event) {
         Arrays.stream(event)
-              .filter(e -> e instanceof ChangeEvent)
-              .forEach(e -> helper.changelogPersister.persist((ChangeEvent) e));
+              .filter(e -> e instanceof ChangelogEvent)
+              .forEach(e -> helper.changelogPersister.persist((ChangelogEvent) e));
         state.events.addAll(Arrays.asList(event));
     }
 }

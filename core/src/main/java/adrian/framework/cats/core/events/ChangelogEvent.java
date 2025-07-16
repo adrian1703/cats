@@ -11,4 +11,10 @@ public abstract class ChangelogEvent extends Event implements Runnable {
         this.changelogId = idGenerator.nextId();
         this.locks       = locks;
     }
+
+    protected ChangelogEvent(ChangelogIdGenerator idGenerator, TimeService timeService, String description, Object... locks) {
+        super(timeService, description);
+        this.changelogId = idGenerator.nextId();
+        this.locks       = locks;
+    }
 }

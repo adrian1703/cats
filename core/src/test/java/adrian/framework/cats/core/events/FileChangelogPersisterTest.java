@@ -82,5 +82,4 @@ class FileChangelogPersisterTest {
         Queue<ChangelogEvent> events = persister.readChangelog();
         assertEquals(5, events.size(), "All persisted events should be read back");
     }
-
 }

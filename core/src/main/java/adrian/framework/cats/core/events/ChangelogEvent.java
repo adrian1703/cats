@@ -1,5 +1,7 @@
 package adrian.framework.cats.core.events;
 
+import adrian.framework.cats.core.time.TimeService;
+
 public abstract class ChangelogEvent extends Event implements Runnable {
 
     private final long     changelogId;

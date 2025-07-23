@@ -39,7 +39,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @see Event
  */
 @ThreadSafe
-public class EventBus {
+public class GlobalEventBus {
 
     private final State  state;
     private final Helper helper;
@@ -54,7 +54,7 @@ public class EventBus {
 
     private record Helper(ChangelogPersister changelogPersister) {}
 
-    public EventBus(ChangelogPersister changelogPersister) {
+    public GlobalEventBus(ChangelogPersister changelogPersister) {
         this.state  = new State();
         this.helper = new Helper(changelogPersister);
     }

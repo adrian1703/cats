@@ -1,4 +1,4 @@
-package adrian.framework.cats.core.events;
+package adrian.framework.cats.core.time;
 
 public interface TimeService {
     /**

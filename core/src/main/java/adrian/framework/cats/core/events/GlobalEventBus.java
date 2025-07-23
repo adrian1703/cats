@@ -41,8 +41,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @ThreadSafe
 public class GlobalEventBus {
 
-    private final State  state;
-    private final Helper helper;
+    private final State state;
 
     private static class State {
         private final BlockingQueue<Event> events    = new LinkedBlockingQueue<>();
@@ -52,11 +51,8 @@ public class GlobalEventBus {
         @GuardedBy("this") private Thread distributor;
     }
 
-    private record Helper(EventPersistor<ChangelogEvent> eventpersistor) {}
-
-    public GlobalEventBus(EventPersistor<ChangelogEvent> eventpersistor) {
-        this.state  = new State();
-        this.helper = new Helper(eventpersistor);
+    public GlobalEventBus() {
+        this.state = new State();
     }
 
     /**
@@ -116,9 +112,6 @@ public class GlobalEventBus {
     }
 
     public void submit(Event... event) {
-        Arrays.stream(event)
-              .filter(e -> e instanceof ChangelogEvent)
-              .forEach(e -> helper.eventpersistor.persist((ChangelogEvent) e));
         state.events.addAll(Arrays.asList(event));
     }
 }

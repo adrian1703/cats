@@ -4,15 +4,22 @@ import java.util.concurrent.ExecutorService;
 
 public class ChangelogApplicator implements EventListener {
 
-    private final ExecutorService executorService;
+    private final Helper helper;
 
-    public ChangelogApplicator(ExecutorService executorService) {this.executorService = executorService;}
+    private record Helper(ExecutorService executorService,
+                          EventPersistor<ChangelogEvent> eventpersistor) {}
+
+    public ChangelogApplicator(ExecutorService executorService,
+                               EventPersistor<ChangelogEvent> eventPersistor) {
+        this.helper = new Helper(executorService, eventPersistor);
+    }
 
     @Override
     public void onEvent(Event event) {
-        if (!(event instanceof ChangelogEvent)) {
+        if (!(event instanceof ChangelogEvent changeEvent)) {
             return;
         }
-        executorService.submit(((ChangelogEvent) event));
+        helper.eventpersistor.persist(changeEvent);
+        helper.executorService.submit((changeEvent));
     }
 }

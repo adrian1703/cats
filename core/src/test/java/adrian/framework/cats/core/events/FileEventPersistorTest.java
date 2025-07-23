@@ -4,14 +4,14 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 
-import static adrian.framework.cats.core.events.FileChangelogPersister.FILE_NAME;
+import static adrian.framework.cats.core.events.FileEventPersistor.FILE_NAME;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class FileChangelogPersisterTest extends ChangelogPersisterTest {
+class FileEventPersistorTest extends EventPersistorTest {
 
     @Override
-    protected ChangelogPersister createPersister() {
-        return new FileChangelogPersister();
+    protected EventPersistor createPersister() {
+        return new FileEventPersistor();
     }
 
     @Override

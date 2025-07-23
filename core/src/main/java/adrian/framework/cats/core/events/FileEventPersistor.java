@@ -5,13 +5,13 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 /**
- * Implementation of {@link ChangelogPersister} that persists changelog events
+ * Implementation of {@link EventPersistor} that persists changelog events
  * by serializing them to a file and reads them back by deserializing.
  * <p>
  * This implementation saves events to a file named "changelog.dat" in the working directory.
  * Events must be {@link Serializable} (as ChangelogEvent implements Serializable).
  */
-public class FileChangelogPersister implements ChangelogPersister {
+public class FileEventPersistor implements EventPersistor {
 
     public static final String FILE_NAME = "changelog.dat";
 

@@ -8,15 +8,15 @@ import java.util.Queue;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-abstract class ChangelogPersisterTest {
+abstract class EventPersistorTest {
 
-    protected ChangelogPersister persister;
+    protected EventPersistor persister;
 
     /**
      * Creates the instance of ChangelogPersister to be tested.
      * Subclasses must provide their own implementation.
      */
-    protected abstract ChangelogPersister createPersister();
+    protected abstract EventPersistor createPersister();
 
     @BeforeEach
     void setUp() {

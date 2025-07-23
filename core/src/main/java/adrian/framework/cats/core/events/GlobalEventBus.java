@@ -52,11 +52,11 @@ public class GlobalEventBus {
         @GuardedBy("this") private Thread distributor;
     }
 
-    private record Helper(ChangelogPersister changelogPersister) {}
+    private record Helper(EventPersistor eventpersistor) {}
 
-    public GlobalEventBus(ChangelogPersister changelogPersister) {
+    public GlobalEventBus(EventPersistor eventpersistor) {
         this.state  = new State();
-        this.helper = new Helper(changelogPersister);
+        this.helper = new Helper(eventpersistor);
     }
 
     /**
@@ -118,7 +118,7 @@ public class GlobalEventBus {
     public void submit(Event... event) {
         Arrays.stream(event)
               .filter(e -> e instanceof ChangelogEvent)
-              .forEach(e -> helper.changelogPersister.persist((ChangelogEvent) e));
+              .forEach(e -> helper.eventpersistor.persist((ChangelogEvent) e));
         state.events.addAll(Arrays.asList(event));
     }
 }

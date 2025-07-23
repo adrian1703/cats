@@ -111,11 +111,11 @@ public class GlobalEventBus {
         return state.isRunning.get(); // should be more clear than calling alive
     }
 
-    void register(EventListener... listener) {
+    public void register(EventListener... listener) {
         state.listeners.addAll(Arrays.asList(listener));
     }
 
-    void submit(Event... event) {
+    public void submit(Event... event) {
         Arrays.stream(event)
               .filter(e -> e instanceof ChangelogEvent)
               .forEach(e -> helper.changelogPersister.persist((ChangelogEvent) e));

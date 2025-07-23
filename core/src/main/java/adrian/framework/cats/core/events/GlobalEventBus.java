@@ -52,9 +52,9 @@ public class GlobalEventBus {
         @GuardedBy("this") private Thread distributor;
     }
 
-    private record Helper(EventPersistor eventpersistor) {}
+    private record Helper(EventPersistor<ChangelogEvent> eventpersistor) {}
 
-    public GlobalEventBus(EventPersistor eventpersistor) {
+    public GlobalEventBus(EventPersistor<ChangelogEvent> eventpersistor) {
         this.state  = new State();
         this.helper = new Helper(eventpersistor);
     }

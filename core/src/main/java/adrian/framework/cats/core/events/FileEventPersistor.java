@@ -11,7 +11,7 @@ import java.util.Queue;
  * This implementation saves events to a file named "changelog.dat" in the working directory.
  * Events must be {@link Serializable} (as ChangelogEvent implements Serializable).
  */
-public class FileEventPersistor implements EventPersistor {
+public class FileEventPersistor implements EventPersistor<ChangelogEvent> {
 
     public static final String FILE_NAME = "changelog.dat";
 

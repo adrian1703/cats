@@ -3,7 +3,7 @@ package adrian.framework.cats.core.events;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class InMemoryEventPersistor implements EventPersistor {
+public class InMemoryEventPersistor implements EventPersistor<ChangelogEvent> {
 
     private final Queue<ChangelogEvent> events = new ConcurrentLinkedQueue<>();
 
